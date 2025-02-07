@@ -1,0 +1,14 @@
+D:\ШАГ\si#\vseZdomu\bin\Debug\net8.0\vseZdomu.exe
+D:\ШАГ\si#\vseZdomu\bin\Debug\net8.0\vseZdomu.deps.json
+D:\ШАГ\si#\vseZdomu\bin\Debug\net8.0\vseZdomu.runtimeconfig.json
+D:\ШАГ\si#\vseZdomu\bin\Debug\net8.0\vseZdomu.dll
+D:\ШАГ\si#\vseZdomu\bin\Debug\net8.0\vseZdomu.pdb
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.GeneratedMSBuildEditorConfig.editorconfig
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.AssemblyInfoInputs.cache
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.AssemblyInfo.cs
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.csproj.CoreCompileInputs.cache
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.dll
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\refint\vseZdomu.dll
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.pdb
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\vseZdomu.genruntimeconfig.cache
+D:\ШАГ\si#\vseZdomu\obj\Debug\net8.0\ref\vseZdomu.dll

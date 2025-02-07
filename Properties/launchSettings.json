@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "vseZdomu": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
