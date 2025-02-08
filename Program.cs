@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-
-
-// нагадувалка додати: магазин +1 моба інтерактив на ресурси чіткоди для тесту правила гри в меню зручніше переміщення
-namespace Game
+﻿namespace Game
 {
-    // клас для всіх об'єктів
     abstract class GameObject
     {
         public string Name { get; set; }
@@ -19,7 +14,6 @@ namespace Game
         }
     }
 
-    // Клас для героя
     class Hero : GameObject
     {
         public int Strength { get; set; }
@@ -113,7 +107,7 @@ namespace Game
 
         public void Rest()
         {
-            Stamina += 2;
+            Stamina += 3;
             Console.WriteLine($"Ви перепочили. Витривалість відновлено на 2. Поточна витривалість: {Stamina}");
         }
 
@@ -208,7 +202,26 @@ namespace Game
         }
     }
 
-    //клас для ресурсів
+    // Клас для Вбивці
+    class Assassin : Enemy
+    {
+        public Assassin(int x, int y) : base("Assassin", x, y, 15, 20) { }
+
+        public void AttackHero(Hero hero)
+        {
+            Console.WriteLine($"{Name} атакує вас!");
+            if (new Random().Next(0, 2) == 0) // 50% шанс вбити героя
+            {
+                Console.WriteLine($"{Name} вбив вас!");
+                hero.Die();
+            }
+            else
+            {
+                Console.WriteLine($"{Name} промахнувся!");
+            }
+        }
+    }
+
     abstract class Resource : GameObject
     {
         public int Amount { get; set; }
@@ -230,6 +243,41 @@ namespace Game
     {
         public Wood(int x, int y, int amount) : base("Wood", x, y, amount) { }
     }
+//магазин
+    class Shop : GameObject
+    {
+        public Shop(int x, int y) : base("Shop", x, y) { }
+
+        public void OpenShop(Hero hero)
+        {
+            Console.WriteLine("Ласкаво просимо до магазину!");
+            Console.WriteLine("1. Зілля зцілення (2 золота)");
+            Console.WriteLine("2. Вийти");
+
+            string choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    if (hero.Gold >= 2)
+                    {
+                        hero.Gold -= 2;
+                        hero.Health = 100;
+                        Console.WriteLine("Ви купили зілля зцілення! Ваше здоров'я повністю відновлено.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("У вас недостатньо золота.");
+                    }
+                    break;
+                case "2":
+                    Console.WriteLine("Дякуємо за візит!");
+                    break;
+                default:
+                    Console.WriteLine("Невірний вибір.");
+                    break;
+            }
+        }
+    }
 
     //грa
     class Game
@@ -249,7 +297,9 @@ namespace Game
                 new Boss(5, 5),
                 new Goblin(7, 7),
                 new Goblin(10, 10),
-                new Boss(15, 15)
+                new Boss(15, 15),
+                new Shop(12, 12),
+                new Assassin(18, 18) 
             };
 
             map = new char[20, 20];
@@ -270,6 +320,8 @@ namespace Game
             map[7, 7] = 'M';
             map[10, 10] = 'M';
             map[15, 15] = 'B';
+            map[12, 12] = 'S'; // Shop
+            map[18, 18] = 'A'; // Assassin
         }
 
         public void Start()
@@ -287,8 +339,11 @@ namespace Game
                 Console.WriteLine("3. Бій з ворогом");
                 Console.WriteLine("4. Показати інвентар");
                 Console.WriteLine("5. Перепочити");
-                Console.WriteLine("0. Показати золото");
-                Console.WriteLine("6. Вийти");
+                Console.WriteLine("6. Відвідати магазин");
+                Console.WriteLine("7. Показати золото");
+                Console.WriteLine("8. показати правила і умовності гри");
+                Console.WriteLine("9. Вийти");
+                Console.WriteLine("Для комфортної гри відкрийте консоль на весь екран.");
 
                 string choice = Console.ReadLine();
 
@@ -309,10 +364,17 @@ namespace Game
                     case "5":
                         hero.Rest();
                         break;
-                    case "0":
+                    case "6":
+                        VisitShop();
+                        break;
+
+                    case "7":
                         Console.WriteLine($"Золото: {hero.Gold}");
                         break;
-                    case "6":
+                    case "8":
+                        Console.WriteLine($"Герой має параметри: сила, спритність, витривалість, здоров’я, золото, дерево та інвентар.\r\nГерой може збирати ресурси, боротися з ворогами, перепочивати, відвідувати магазин та помирати.\r\nПри падінні витривалості до 0 спрацьовує попередження; якщо це повторюється, герой помирає.\r\nРесурси:\r\n\r\nДоступні типи ресурсів: золото та дерево.\r\nГерой може збирати ресурси, перебуваючи на одній позиції з ними на карті.\r\nВороги:\r\n\r\nЄ кілька типів ворогів: гоблін, бос та вбивця.\r\nГобліни можуть забирати 1 здоров'я після поразки.\r\nБій із босом вимагає витрати витривалості (мінімум 5). Якщо витривалості недостатньо, герой помирає.\r\nПеремога над босом має шанс (75%) додати до інвентаря \"Проклятий шлем\".\r\nБій із босом другого рівня може завершитися миттєвою смертю.\r\nВбивця має 50% шанс вбити героя.\r\nМагазин:\r\n\r\nГерой може відвідувати магазин для купівлі зілля зцілення за 2 золота, яке повністю відновлює здоров’я.\r\nКарта:\r\n\r\nПредставлена у вигляді матриці 20x20.\r\nНа карті розташовані герої, ресурси, вороги та магазин.\r\nПересування:\r\n\r\nГерой може рухатися вліво (a), вправо (d), вгору (w), вниз (s).\r\nРух за межі карти неможливий.\r\nІнвентар:\r\n\r\nГерой може переглядати та додавати предмети до інвентаря.\r\nСистема бою:\r\n\r\nЯкщо сила героя перевищує силу ворога, він перемагає.\r\nПеремога над ворогом приносить нагороду у вигляді золота.\r\nПоразка завершує гру.\r\nВідпочинок:\r\n\r\nВідновлює витривалість героя на 2 одиниці.\r\nСтатус:\r\n\r\nГерой може переглядати поточні показники здоров’я та витривалості.\r\nЗакінчення гри:\r\nГра завершується після смерті героя або за вибором користувача.\r\nПісля смерті гравець може перезапустити гру або вийти.");
+                        break;
+                    case "9":
                         return;
                     default:
                         Console.WriteLine("Невірний вибір.");
@@ -397,6 +459,10 @@ namespace Game
                     {
                         boss.FightHero(hero);
                     }
+                    else if (enemy is Assassin assassin)
+                    {
+                        assassin.AttackHero(hero);
+                    }
                     else
                     {
                         hero.Fight(enemy);
@@ -406,6 +472,19 @@ namespace Game
                 }
             }
             Console.WriteLine("Ворогів немає на цій позиціі.");
+        }
+
+        private void VisitShop()
+        {
+            foreach (var obj in gameObjects)
+            {
+                if (obj is Shop shop && hero.X == shop.X && hero.Y == shop.Y)
+                {
+                    shop.OpenShop(hero);
+                    return;
+                }
+            }
+            Console.WriteLine("Магазину немає на цій позиції.");
         }
     }
 
@@ -427,4 +506,6 @@ namespace Game
         }
     }
 }
+
+
 
